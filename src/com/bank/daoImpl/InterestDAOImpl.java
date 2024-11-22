@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InterestDAOImpl implements InterestDAO {
+    //Inserting interest details.
     @Override
     public void addInterest(Interest interest) {
         String query="INSERT INTO Interest(account_number, interest_amount, timestamp) VALUES(?, ?,?)";
@@ -24,25 +25,61 @@ public class InterestDAOImpl implements InterestDAO {
         }
     }
 
-    @Override
-    public List<Interest> getInterestByAccount(int accountNumber) {
-        List<Interest> interests=new ArrayList<>();
-        String query="SELECT * FROM INTEREST WHERE account_number=?";
-        try (Connection connection = DBConnection.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement(query);
 
-            ResultSet rs=stmt.executeQuery();
-            while (rs.next()){
-                interests.add(new Interest(
-                        rs.getInt("account_number"),
-                        rs.getDouble("interest_amount"),
-                        rs.getTimestamp("timestamp").toLocalDateTime()
-                ));
-                return interests;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return List.of();
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Getting Interest of a specified account
+//
+//    @Override
+//    public List<Interest> getInterestByAccount(int accountNumber) {
+//        List<Interest> interests=new ArrayList<>();
+//        String query="SELECT * FROM INTEREST WHERE account_number=?";
+//        try (Connection connection = DBConnection.getConnection()) {
+//            PreparedStatement stmt = connection.prepareStatement(query);
+//
+//            ResultSet rs=stmt.executeQuery();
+//            while (rs.next()){
+//                interests.add(new Interest(
+//                        rs.getInt("account_number"),
+//                        rs.getDouble("interest_amount"),
+//                        rs.getTimestamp("timestamp").toLocalDateTime()
+//                ));
+//
+//            }
+//            return interests;
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

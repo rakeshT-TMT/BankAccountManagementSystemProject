@@ -1,29 +1,21 @@
 package com.bank.daoImpl;
 
 import com.bank.dao.TransactionDAO;
-import com.bank.models.Account;
-import com.bank.models.Interest;
+
 import com.bank.models.Transaction;
 import com.bank.utils.DBConnection;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class TransactionDAOImpl implements TransactionDAO {
 
-
+    //Inserting transaction details.
     @Override
     public void addTransaction(Transaction transaction) {
         String query="INSERT INTO Transaction(transaction_id, account_number, type, amount, timestamp) VALUES(?, ?, ?, ?,?)";
         try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
-            int transactionId=generateTransactionId();
-            while (!isTransactionIdUnique(transactionId)){
-                transactionId=generateTransactionId();
-            }
 
 
             stmt.setInt(1,transaction.getTransactionId());
@@ -40,73 +32,72 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
 
-    @Override
-    public Optional<Transaction> findTransaction(int accountNumber) {
-        String query="SELECT * from transaction WHERE account_number=?";
+    //Getting total deposits and withdrawals.
 
+    public Map<String, Integer> getTransactionSummary(){
+        Map<String , Integer> summary=new HashMap<>();
+        String query="SELECT type, COUNT(*) as total FROM transaction GROUP BY type";
+        Connection connection=DBConnection.getConnection();
         try {
-            Connection connection = DBConnection.getConnection();
             PreparedStatement stmt=connection.prepareStatement(query);
-            stmt.setInt(1, accountNumber);
             ResultSet rs=stmt.executeQuery();
-            if(rs.next()){
-                Transaction transaction=new Transaction(
-                        rs.getInt("transaction_id"),
-                        rs.getInt("account_number"),
-                        rs.getString("type"),
-                        rs.getDouble("amount"),
-                        rs.getTimestamp("timestamp").toLocalDateTime()
-
-                );
-                return Optional.of(transaction);
+            while (rs.next()){
+                summary.put(rs.getString("type"),
+                        rs.getInt("total"));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
-
+        return summary;
     }
 
-    public int generateTransactionId(){
-        return 10000 + new Random().nextInt(9000) ;
-    }
 
-    // Checking if the generated account number is present in the table
-    public boolean isTransactionIdUnique(int transactionId) {
-        String query = "SELECT 1 from transaction where transaction_id=?";
-        Connection connection = DBConnection.getConnection();
-        ResultSet rs;
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setInt(1, transactionId);
-            rs = stmt.executeQuery();
-            return !rs.next();
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public List<Interest> getTransacionByAccount(int accountNumber){
-        List<Transaction> transactions=new ArrayList<>();
-        String query="SELECT * FROM transaction WHERE account_number=?";
-        try (Connection connection = DBConnection.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement(query);
 
-            ResultSet rs=stmt.executeQuery();
-            while (rs.next()){
-                transactions.add(new Transaction(
-                        rs.getInt("transaction_id"),
-                        rs.getInt("account_number"),
-                        rs.getString("type"),
-                        rs.getDouble("amount"),
-                        rs.getTimestamp("timestamp").toLocalDateTime()
-                ));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return List.of();
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    public List<Interest> getTransactionByAccount(int accountNumber){
+//        List<Transaction> transactions=new ArrayList<>();
+//        String query="SELECT * FROM transaction WHERE account_number=?";
+//        try (Connection connection = DBConnection.getConnection()) {
+//            PreparedStatement stmt = connection.prepareStatement(query);
+//
+//            ResultSet rs=stmt.executeQuery();
+//            while (rs.next()){
+//                transactions.add(new Transaction(
+//                        rs.getInt("transaction_id"),
+//                        rs.getInt("account_number"),
+//                        rs.getString("type"),
+//                        rs.getDouble("amount"),
+//                        rs.getTimestamp("timestamp").toLocalDateTime()
+//                ));
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return List.of();
+//    }
 }

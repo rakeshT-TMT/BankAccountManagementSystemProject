@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface InterestDAO {
     void addInterest(Interest interest);
-    List<Interest> getInterestByAccount(int accountNumber);
+
 }

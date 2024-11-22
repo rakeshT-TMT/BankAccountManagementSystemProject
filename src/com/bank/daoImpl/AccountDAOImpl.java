@@ -13,7 +13,7 @@ import java.util.Random;
 public class AccountDAOImpl implements AccountDAO {
     Connection connection;
 
-    // Creating Bank Account
+    // Inserting Bank account details and Creating Bank Account
     @Override
     public void createAccount(Account account) {
         String query="INSERT INTO account(account_number, name, address, pin, balance, account_type) VALUES (?, ?, ?, ?, ?, ?)";
@@ -62,7 +62,7 @@ public class AccountDAOImpl implements AccountDAO {
         }
     }
 
-
+    //Finding account , checking if the account is present in table
 
     public Optional<Account> findAccount(int accountNumber) {
         String query="SELECT * from Account WHERE account_number=?";
@@ -91,24 +91,25 @@ public class AccountDAOImpl implements AccountDAO {
         return Optional.empty();
     }
 
+    //Updating bank balance when we do deposit and withdrawal operations
     @Override
-    public boolean updateAccount(Account account) {
+    public void updateAccount(Account account) {
         String query="UPDATE account SET balance=? WHERE account_number=?";
         Connection connection=DBConnection.getConnection();
         try {
             PreparedStatement stmt=connection.prepareStatement(query);
             stmt.setDouble(1,account.getBalance());
             stmt.setInt(2,account.getAccountNumber());
-            return stmt.executeUpdate()>0;
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public Map<String, Long> gatAccountSummaryByType(){
-        Map<String, Long> summary=new HashMap<>();
+    //Getting total accounts by type
+    public Map<String, Integer> gatAccountSummaryByType(){
+        Map<String, Integer> summary=new HashMap<>();
         String query="SELECT account_type, COUNT(*) AS count from account GROUP By account_type";
         Connection connection=DBConnection.getConnection();
         try {
@@ -116,7 +117,7 @@ public class AccountDAOImpl implements AccountDAO {
             ResultSet rs=stmt.executeQuery();
             while (rs.next()){
                 summary.put(rs.getString("account_type"),
-                        rs.getLong("count"));
+                        rs.getInt("count"));
             }
 
         } catch (SQLException e) {
@@ -125,21 +126,6 @@ public class AccountDAOImpl implements AccountDAO {
         return summary;
     }
 
-    public Map<String, Double> getTransactionSummary(){
-        Map<String , Double> summary=new HashMap<>();
-        String query="SELECT transaction_type, SUM(amount) as total FROM transaction GROUP BY transaction_type";
-        try {
-            PreparedStatement stmt=connection.prepareStatement(query);
-            ResultSet rs=stmt.executeQuery();
-            while (rs.next()){
-                summary.put(rs.getString("transaction_type"),
-                        rs.getDouble("total"));
-            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return summary;
-    }
 
 }

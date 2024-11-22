@@ -20,14 +20,18 @@ import java.util.Optional;
 public class BankService {
 
     public AccountDAO accountDAO=new AccountDAOImpl();
+    public TransactionDAO transactionDAO=new TransactionDAOImpl();
+    InterestDAO interestDAO= new InterestDAOImpl();
 
+    // Adding Account to Database
+//    public void addAccount(int accountNumber, String name, String address, int pin, double balance, String accountType){
+//
+//        accountDAO.createAccount(new Account(accountNumber, name, address, pin, balance, accountType));
+//
+//
+//    }
 
-    public void addAccount(int accountNumber, String name, String address, int pin, double balance, String accountType){
-
-        accountDAO.createAccount(new Account(accountNumber, name, address, pin, balance, accountType));
-
-
-    }
+    //Deposit money and updated the account balance
     public void depositMoney(int accountNumber, int pin, double amount){
         if (amount<=0){
             System.out.println("Amount should be positive");
@@ -40,8 +44,9 @@ public class BankService {
                 account.setBalance(account.getBalance()+amount);
                 accountDAO.updateAccount(account);
                 System.out.println("Deposit successful. New Balance: "+account.getBalance());
+                // Adding Transaction details into transaction table
                 Transaction transaction=new Transaction(0,accountNumber,"Deposit", amount, LocalDateTime.now());
-                TransactionDAO transactionDAO=new TransactionDAOImpl();
+
                 transactionDAO.addTransaction(transaction);
 
 
@@ -53,6 +58,7 @@ public class BankService {
         }
 
     }
+    //Withdrawal money and updated the account balance
     public void withdrawalMoney(int accountNumber, int pin, double amount){
         if (amount<=0){
             System.out.println("Amount should be positive");
@@ -67,8 +73,8 @@ public class BankService {
                     account.setBalance(account.getBalance()-amount);
                     accountDAO.updateAccount(account);
                     System.out.println("Withdrawal successful. Remaining Balance: "+account.getBalance());
+                    // Adding Transaction details into transaction table
                     Transaction transaction=new Transaction(0,accountNumber,"Withdraw", amount, LocalDateTime.now());
-                    TransactionDAO transactionDAO=new TransactionDAOImpl();
                     transactionDAO.addTransaction(transaction);
 
                 }else {
@@ -83,6 +89,7 @@ public class BankService {
 
 
     }
+    // Checking Account balance
     public void balanceAmount(int accountNumber, int pin){
 
         Optional<Account> accountOpt=accountDAO.findAccount(accountNumber);
@@ -100,6 +107,7 @@ public class BankService {
 
     }
 
+    //Calculating interest to the balance amount
     public void calculateInterest(int accountNumber, int pin){
 
         Optional<Account> accountOpt=accountDAO.findAccount(accountNumber);
@@ -111,7 +119,7 @@ public class BankService {
                     double interestAmount=account.getBalance()*interestRate;
                     System.out.println("Interest: "+interestAmount);
                     Interest interest=new Interest(accountNumber,interestAmount,LocalDateTime.now());
-                    InterestDAO interestDAO= new InterestDAOImpl();
+
                     interestDAO.addInterest(interest);
                 }else{
                     System.out.println("Not a Savings account");
@@ -126,16 +134,16 @@ public class BankService {
 
     }
 
+    // View count of account types
     public void viewAccountSummary(){
-        Map<String , Long> accountSummary=accountDAO.gatAccountSummaryByType();
+        Map<String , Integer> accountSummary=accountDAO.gatAccountSummaryByType();
         accountSummary.forEach((type, count)-> System.out.println(type+" : "+count));
 
     }
 
     public void viewTransactionSummary(){
-        Map<String, Double> transactionSummary=accountDAO.getTransactionSummary();
-        System.out.println("Deposits: "+transactionSummary.getOrDefault("deposit",0.0));
-        System.out.println("Withdrawal: "+transactionSummary.getOrDefault("withdrawal",0.0));
+        Map<String, Integer> transactionSummary=transactionDAO.getTransactionSummary();
+        transactionSummary.forEach((type, count)-> System.out.println(type+" : "+count));
 
     }
 }
