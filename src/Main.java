@@ -34,20 +34,20 @@ public class Main {
 
                     case 1:
                         System.out.println("Enter Name");
-                        String name = sc.nextLine();
+                        final String name = sc.nextLine();
                         System.out.println("Enter Address");
-                        String address = sc.nextLine();
+                        final String address = sc.nextLine();
                         System.out.println("Enter 4 digits PIN");
-                        int pin = sc.nextInt();
+                        final int pin = sc.nextInt();
                         String enterPin = String.valueOf(pin);
 
                         if(enterPin.length() == 4){
                             System.out.println("Initial Deposit");
-                            double initialDeposit = sc.nextDouble();
+                            final double initialDeposit = sc.nextDouble();
                             if (initialDeposit>=1000){
                                 System.out.println("Account Type Savings/Current");
                                 sc.nextLine();
-                                String accountType = sc.nextLine();
+                                final String accountType = sc.nextLine();
                                 if(("Savings".equals(accountType)) || ("Current".equals(accountType))){
                                     accountDAO.createAccount(new Account(0, name, address, pin, initialDeposit, accountType));
 
@@ -68,14 +68,14 @@ public class Main {
                     //   Deposit Money
                     case 2:
                         System.out.println("Enter Account Number");
-                        int depositAccountNumber = sc.nextInt();
+                        final int depositAccountNumber = sc.nextInt();
                         System.out.println("Enter 4 digit pin");
-                        int depositPin = sc.nextInt();
+                        final int depositPin = sc.nextInt();
                         String stringPin = String.valueOf(depositPin);
 
                         if (stringPin.length() == 4) {
                             System.out.println("Enter Deposit amount");
-                            double depositAmount = sc.nextDouble();
+                            final double depositAmount = sc.nextDouble();
                             sc.nextLine();
                             bankService.depositMoney(depositAccountNumber, depositPin, depositAmount);
 
@@ -88,9 +88,9 @@ public class Main {
                     // Withdrawal Money
                     case 3:
                         System.out.println("Enter Account Number");
-                        int withdrawalAccountNumber = sc.nextInt();
+                        final int withdrawalAccountNumber = sc.nextInt();
                         System.out.println("Enter 4 digit pin");
-                        int withdrawalPin = sc.nextInt();
+                        final int withdrawalPin = sc.nextInt();
                         String withdrawalPinstr = String.valueOf(withdrawalPin);
                         double withdrawalAmount = 0.0;
                         if (withdrawalPinstr.length() == 4) {
@@ -107,9 +107,9 @@ public class Main {
                     // Check Bank Balance
                     case 4:
                         System.out.println("Enter Account Number");
-                        int checkAccountNumber = sc.nextInt();
+                        final int checkAccountNumber = sc.nextInt();
                         System.out.println("Enter 4 digit pin");
-                        int checkPin = sc.nextInt();
+                        final int checkPin = sc.nextInt();
                         String balancePin = String.valueOf(checkPin);
 
                         if (balancePin.length() == 4) {
@@ -123,9 +123,9 @@ public class Main {
                     //Calculate Interest
                     case 5:
                         System.out.println("Enter Account Number");
-                        int interestAccountNumber = sc.nextInt();
+                        final int interestAccountNumber = sc.nextInt();
                         System.out.println("Enter 4 digit pin");
-                        int interestPin = sc.nextInt();
+                        final int interestPin = sc.nextInt();
 
                         String stringInterestPin = String.valueOf(interestPin);
 
@@ -144,7 +144,7 @@ public class Main {
                         System.out.println("Choose Account Summaries");
                         System.out.println("1.Total accounts by type");
                         System.out.println("2.Total deposits and withdrawals");
-                        int reportChoice=sc.nextInt();
+                        final int reportChoice=sc.nextInt();
 
                         if(reportChoice==1){
                             bankService.viewAccountSummary();

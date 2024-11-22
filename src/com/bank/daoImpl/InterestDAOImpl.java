@@ -12,7 +12,7 @@ public class InterestDAOImpl implements InterestDAO {
     //Inserting interest details.
     @Override
     public void addInterest(Interest interest) {
-        String query="INSERT INTO Interest(account_number, interest_amount, timestamp) VALUES(?, ?,?)";
+        final String query="INSERT INTO Interest(account_number, interest_amount, timestamp) VALUES(?, ?,?)";
         try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1,interest.getAccountNumber());

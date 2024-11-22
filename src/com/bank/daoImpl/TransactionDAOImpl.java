@@ -13,7 +13,7 @@ public class TransactionDAOImpl implements TransactionDAO {
     //Inserting transaction details.
     @Override
     public void addTransaction(Transaction transaction) {
-        String query="INSERT INTO Transaction(transaction_id, account_number, type, amount, timestamp) VALUES(?, ?, ?, ?,?)";
+        final String query="INSERT INTO Transaction(transaction_id, account_number, type, amount, timestamp) VALUES(?, ?, ?, ?,?)";
         try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -27,7 +27,7 @@ public class TransactionDAOImpl implements TransactionDAO {
             System.out.println("Transaction is Added.");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -36,7 +36,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     public Map<String, Integer> getTransactionSummary(){
         Map<String , Integer> summary=new HashMap<>();
-        String query="SELECT type, COUNT(*) as total FROM transaction GROUP BY type";
+        final String query="SELECT type, COUNT(*) as total FROM transaction GROUP BY type";
         Connection connection=DBConnection.getConnection();
         try {
             PreparedStatement stmt=connection.prepareStatement(query);
@@ -47,7 +47,7 @@ public class TransactionDAOImpl implements TransactionDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return summary;
     }

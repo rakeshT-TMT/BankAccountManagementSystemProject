@@ -16,7 +16,7 @@ public class AccountDAOImpl implements AccountDAO {
     // Inserting Bank account details and Creating Bank Account
     @Override
     public void createAccount(Account account) {
-        String query="INSERT INTO account(account_number, name, address, pin, balance, account_type) VALUES (?, ?, ?, ?, ?, ?)";
+        final String query="INSERT INTO account(account_number, name, address, pin, balance, account_type) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             connection= DBConnection.getConnection();
@@ -48,7 +48,7 @@ public class AccountDAOImpl implements AccountDAO {
 
     // Checking if the generated account number is present in the table
     public boolean isAccountNumberUnique(int accountNumber) {
-        String query = "SELECT 1 from account where account_number=?";
+        final String query = "SELECT 1 from account where account_number=?";
         connection = DBConnection.getConnection();
         ResultSet rs;
         try {
@@ -65,7 +65,7 @@ public class AccountDAOImpl implements AccountDAO {
     //Finding account , checking if the account is present in table
 
     public Optional<Account> findAccount(int accountNumber) {
-        String query="SELECT * from Account WHERE account_number=?";
+        final String query="SELECT * from Account WHERE account_number=?";
 
         try {
             connection = DBConnection.getConnection();
@@ -86,7 +86,7 @@ public class AccountDAOImpl implements AccountDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return Optional.empty();
     }
@@ -94,7 +94,7 @@ public class AccountDAOImpl implements AccountDAO {
     //Updating bank balance when we do deposit and withdrawal operations
     @Override
     public void updateAccount(Account account) {
-        String query="UPDATE account SET balance=? WHERE account_number=?";
+        final String query="UPDATE account SET balance=? WHERE account_number=?";
         Connection connection=DBConnection.getConnection();
         try {
             PreparedStatement stmt=connection.prepareStatement(query);
@@ -103,14 +103,14 @@ public class AccountDAOImpl implements AccountDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     //Getting total accounts by type
     public Map<String, Integer> gatAccountSummaryByType(){
         Map<String, Integer> summary=new HashMap<>();
-        String query="SELECT account_type, COUNT(*) AS count from account GROUP By account_type";
+        final String query="SELECT account_type, COUNT(*) AS count from account GROUP By account_type";
         Connection connection=DBConnection.getConnection();
         try {
             PreparedStatement stmt=connection.prepareStatement(query);
@@ -121,7 +121,7 @@ public class AccountDAOImpl implements AccountDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return summary;
     }
