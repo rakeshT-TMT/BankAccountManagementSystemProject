@@ -22,7 +22,7 @@ public class AccountDAOImpl implements AccountDAO {
             connection= DBConnection.getConnection();
             PreparedStatement stmt=connection.prepareStatement(query);
             int accountNumber=generateAccountNumber();
-            while (!isAccountNumberUnique(accountNumber)){
+            while (isAccountNumberUnique(accountNumber)){
                 accountNumber=generateAccountNumber();
             }
 
@@ -55,7 +55,7 @@ public class AccountDAOImpl implements AccountDAO {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, accountNumber);
             rs = stmt.executeQuery();
-            return !rs.next();
+            return rs.next();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

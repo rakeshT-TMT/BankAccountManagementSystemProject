@@ -38,6 +38,7 @@ public class InterestDAOImpl implements InterestDAO {
                         rs.getDouble("interest_amount"),
                         rs.getTimestamp("timestamp").toLocalDateTime()
                 ));
+                return interests;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

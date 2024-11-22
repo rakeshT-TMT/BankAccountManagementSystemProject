@@ -17,7 +17,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public void addTransaction(Transaction transaction) {
-        String query="INSERT INTO Transaction(transaction_id, account_number, account_type, amount, timestamp) VALUES(?, ?, ?, ?,?)";
+        String query="INSERT INTO Transaction(transaction_id, account_number, type, amount, timestamp) VALUES(?, ?, ?, ?,?)";
         try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
             int transactionId=generateTransactionId();
@@ -99,7 +99,7 @@ public class TransactionDAOImpl implements TransactionDAO {
                 transactions.add(new Transaction(
                         rs.getInt("transaction_id"),
                         rs.getInt("account_number"),
-                        rs.getString("account_type"),
+                        rs.getString("type"),
                         rs.getDouble("amount"),
                         rs.getTimestamp("timestamp").toLocalDateTime()
                 ));

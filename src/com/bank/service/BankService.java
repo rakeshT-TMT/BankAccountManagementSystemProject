@@ -1,12 +1,21 @@
 package com.bank.service;
 
 import com.bank.dao.AccountDAO;
+import com.bank.dao.InterestDAO;
+import com.bank.dao.TransactionDAO;
 import com.bank.daoImpl.AccountDAOImpl;
+import com.bank.daoImpl.InterestDAOImpl;
+import com.bank.daoImpl.TransactionDAOImpl;
 import com.bank.models.Account;
+import com.bank.models.Interest;
+import com.bank.models.Transaction;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+
 
 public class BankService {
 
@@ -31,6 +40,10 @@ public class BankService {
                 account.setBalance(account.getBalance()+amount);
                 accountDAO.updateAccount(account);
                 System.out.println("Deposit successful. New Balance: "+account.getBalance());
+                Transaction transaction=new Transaction(0,accountNumber,"Deposit", amount, LocalDateTime.now());
+                TransactionDAO transactionDAO=new TransactionDAOImpl();
+                transactionDAO.addTransaction(transaction);
+
 
             }else{
                 System.out.println("Incorrect Pin");
@@ -53,8 +66,11 @@ public class BankService {
                 if(account.getBalance()>amount){
                     account.setBalance(account.getBalance()-amount);
                     accountDAO.updateAccount(account);
-
                     System.out.println("Withdrawal successful. Remaining Balance: "+account.getBalance());
+                    Transaction transaction=new Transaction(0,accountNumber,"Withdraw", amount, LocalDateTime.now());
+                    TransactionDAO transactionDAO=new TransactionDAOImpl();
+                    transactionDAO.addTransaction(transaction);
+
                 }else {
                     System.out.println("Less Balance");
                 }
@@ -92,8 +108,11 @@ public class BankService {
             if(account.getPin()==pin){
                 if(Objects.equals(account.getAccountType(), "Savings")){
                     double interestRate=0.04;
-                    double interest=account.getBalance()*interestRate;
-                    System.out.println("Interest: "+interest);
+                    double interestAmount=account.getBalance()*interestRate;
+                    System.out.println("Interest: "+interestAmount);
+                    Interest interest=new Interest(accountNumber,interestAmount,LocalDateTime.now());
+                    InterestDAO interestDAO= new InterestDAOImpl();
+                    interestDAO.addInterest(interest);
                 }else{
                     System.out.println("Not a Savings account");
                 }
