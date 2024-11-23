@@ -7,9 +7,11 @@ import java.util.Optional;
 
 public interface AccountDAO {
     void createAccount(Account account);
+
     Optional<Account> findAccount(int accountNumber);
+
     void updateAccount(Account account);
 
-    Map<String, Integer> gatAccountSummaryByType();
+    Map<String, Integer> getAccountSummaryByType();
 
 }

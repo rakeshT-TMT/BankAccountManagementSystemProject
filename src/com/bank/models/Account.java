@@ -2,7 +2,7 @@ package com.bank.models;
 
 public class Account {
 
-    private  int accountNumber;
+    private int accountNumber;
     private String name;
     private String address;
     private int pin;

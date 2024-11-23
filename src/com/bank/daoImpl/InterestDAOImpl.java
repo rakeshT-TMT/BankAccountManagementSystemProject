@@ -4,62 +4,35 @@ import com.bank.dao.InterestDAO;
 import com.bank.models.Interest;
 import com.bank.utils.DBConnection;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class InterestDAOImpl implements InterestDAO {
+
     //Inserting interest details.
     @Override
     public void addInterest(Interest interest) {
-        final String query="INSERT INTO Interest(account_number, interest_amount, timestamp) VALUES(?, ?,?)";
+        final String query = "INSERT INTO Interest(account_number, interest_amount, timestamp) VALUES(?, ?,?)";
+
         try (Connection connection = DBConnection.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setInt(1,interest.getAccountNumber());
-            stmt.setDouble(2,interest.getInterestAmount());
+            stmt.setInt(1, interest.getAccountNumber());
+            stmt.setDouble(2, interest.getInterestAmount());
             stmt.setTimestamp(3, Timestamp.valueOf(interest.getTimestamp()));
             stmt.executeUpdate();
             System.out.println("Interest is Added.");
         } catch (SQLException e) {
+            System.out.println("Exception at addInterest() Method : " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Getting Interest of a specified account
+//Getting Interest of a specified account
 //
 //    @Override
 //    public List<Interest> getInterestByAccount(int accountNumber) {
@@ -82,4 +55,4 @@ public class InterestDAOImpl implements InterestDAO {
 //            throw new RuntimeException(e);
 //        }
 //    }
-}
+
