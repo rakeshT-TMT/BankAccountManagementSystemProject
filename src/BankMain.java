@@ -3,6 +3,7 @@ import com.bank.daoImpl.AccountDAOImpl;
 import com.bank.models.Account;
 import com.bank.service.BankService;
 
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -162,6 +163,8 @@ public class BankMain {
             } while (choice != 8);
         } catch (InputMismatchException e) {
             System.out.println("Enter a Valid.");
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
