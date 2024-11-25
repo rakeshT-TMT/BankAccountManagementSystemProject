@@ -17,11 +17,10 @@ import java.util.logging.Logger;
 
 public class AccountDAOImpl implements AccountDAO {
     private static final Logger logger = Logger.getLogger(AccountDAOImpl.class.getName());
-    private Connection connection;
 
     // Inserting Bank account details and Creating Bank Account
     @Override
-    public void createAccount(Account account)  {
+    public void createAccount(Account account) {
         final String query = "INSERT INTO account(account_number, name, address, pin, balance, account_type) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -64,9 +63,9 @@ public class AccountDAOImpl implements AccountDAO {
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, accountNumber);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
-            }
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Exception at isAccountNumberUnique() Method: ", e);
             throw e; // Rethrow exception to parent class
@@ -75,25 +74,25 @@ public class AccountDAOImpl implements AccountDAO {
 
     // Finding account, checking if the account is present in the table
     @Override
-    public Optional<Account> findAccount(final int accountNumber){
+    public Optional<Account> findAccount(final int accountNumber) {
         final String query = "SELECT * from Account WHERE account_number=?";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, accountNumber);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Account account = new Account(
-                            rs.getInt("account_number"),
-                            rs.getString("name"),
-                            rs.getString("address"),
-                            rs.getInt("pin"),
-                            rs.getDouble("balance"),
-                            rs.getString("account_type")
-                    );
-                    return Optional.of(account);
-                }
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Account account = new Account(
+                        rs.getInt("account_number"),
+                        rs.getString("name"),
+                        rs.getString("address"),
+                        rs.getInt("pin"),
+                        rs.getDouble("balance"),
+                        rs.getString("account_type")
+                );
+                return Optional.of(account);
             }
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Exception at findAccount() Method: ", e);
             try {
@@ -128,7 +127,7 @@ public class AccountDAOImpl implements AccountDAO {
 
     // Getting total accounts by type
     @Override
-    public Map<String, Integer> getAccountSummaryByType()  {
+    public Map<String, Integer> getAccountSummaryByType() {
         final Map<String, Integer> summary = new HashMap<>();
         final String query = "SELECT account_type, COUNT(*) AS count from account GROUP By account_type";
         try (Connection connection = DBConnection.getConnection();

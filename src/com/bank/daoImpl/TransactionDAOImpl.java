@@ -33,7 +33,11 @@ public class TransactionDAOImpl implements TransactionDAO {
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SQL Exception at addTransaction() Method: ", e);
-            throw new DataAccessException("Failed to add transaction for account: " + transaction.getAccountNumber(), e);
+            try {
+                throw e;
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -53,40 +57,14 @@ public class TransactionDAOImpl implements TransactionDAO {
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SQL Exception at getTransactionSummary() Method: ", e);
-            throw new DataAccessException("Failed to fetch transaction summary.", e);
+            try {
+                throw e;
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         return summary;
     }
 
-    // Custom exception for data access errors
-    public static class DataAccessException extends RuntimeException {
-        public DataAccessException(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
 }
-
-
-
-//    public List<Interest> getTransactionByAccount(int accountNumber){
-//        List<Transaction> transactions=new ArrayList<>();
-//        String query="SELECT * FROM transaction WHERE account_number=?";
-//        try (Connection connection = DBConnection.getConnection()) {
-//            PreparedStatement stmt = connection.prepareStatement(query);
-//
-//            ResultSet rs=stmt.executeQuery();
-//            while (rs.next()){
-//                transactions.add(new Transaction(
-//                        rs.getInt("transaction_id"),
-//                        rs.getInt("account_number"),
-//                        rs.getString("type"),
-//                        rs.getDouble("amount"),
-//                        rs.getTimestamp("timestamp").toLocalDateTime()
-//                ));
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return List.of();
-//    }
