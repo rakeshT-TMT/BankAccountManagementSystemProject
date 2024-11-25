@@ -1,6 +1,6 @@
 Project name: BASIC BANK ACCOUNT MANAGEMENT SYSTEM
 This is a simple bank management system designed to handle basic banking operations such as creating accounts, depositing and withdrawing money, checking balance, calculating interest, and generating reports. The system uses a DAO (Data Access Object) pattern for interacting with the database, and implements various banking operations through a service layer.
-I developed a basic Bank Account Management System in Java that performs the following operations:
+It performs the following operations:
 1. Open an account.
 2. Deposit money.
 3. Withdrawal money.
