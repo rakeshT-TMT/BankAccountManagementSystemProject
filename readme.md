@@ -14,6 +14,10 @@ The system follows:
 3. Object-Oriented programming principles.
 4. Utilize Collections and Exception Handling.
 5. Naming conventions. 
+6. SQL Database.
+7. JDBC (Java Database Connectivity).
+
+
 
 This project simulates basic bank operations including:
 
